@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "639701934535",
+    "project_id": "apiplayground-2f3be",
+    "storage_bucket": "apiplayground-2f3be.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:639701934535:android:875569431e045dc603f9e2",
+        "android_client_info": {
+          "package_name": "com.example.apiplayground"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAZS541wjXAmmSbOsPAJ5xEqkx3PIlM-Uk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
