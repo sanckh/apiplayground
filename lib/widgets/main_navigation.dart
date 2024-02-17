@@ -30,69 +30,91 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     });
   }
 
-  void _saveIndex() async {
+  void _saveIndex(int index) async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.setInt('currentIndex', _currentIndex);
+    prefs.setInt('currentIndex', index);
   }
 
- _fetchUserData() async {
-  final firebaseUser = auth.FirebaseAuth.instance.currentUser;
-  if (firebaseUser != null) {
-    User? user = await _userService.getUserProfile(firebaseUser.uid);
-    if (mounted) {
-      setState(() {
-        _user = user;
-        _isLoading = false;
-      });
-    }
-  } else {
-    if (mounted) {
-      setState(() {
-        _isLoading = false;
-      });
+  _fetchUserData() async {
+    final firebaseUser = auth.FirebaseAuth.instance.currentUser;
+    if (firebaseUser != null) {
+      User? user = await _userService.getUserProfile(firebaseUser.uid);
+      if (mounted) {
+        setState(() {
+          _user = user;
+          _isLoading = false;
+        });
+      }
+    } else {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
-      return CircularProgressIndicator();
+      return Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
     final List<Widget> _screens = [
       HomeScreen(),
-      // ProfileScreen(user: _user!),
-      // SettingsScreen(),
+      // ProfileScreen(user: _user!), // Uncomment and replace with actual ProfileScreen
+      // SettingsScreen(), // Uncomment and replace with actual SettingsScreen
     ];
 
+    void _onSelectItem(int index) {
+      Navigator.of(context).pop(); // Close the drawer
+      setState(() {
+        _currentIndex = index;
+      });
+      _saveIndex(index);
+    }
+
     return Scaffold(
+      appBar: AppBar(
+        title: Text('API Playground'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Colors.blue,
+              ),
+              child: Text(
+                'Drawer Header',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 24,
+                ),
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.home),
+              title: Text('Home'),
+              onTap: () => _onSelectItem(0),
+            ),
+            ListTile(
+              leading: Icon(Icons.person),
+              title: Text('Profile'),
+              onTap: () => _onSelectItem(1),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () => _onSelectItem(2),
+            ),
+          ],
+        ),
+      ),
       body: IndexedStack(
         index: _currentIndex,
         children: _screens,
-      ),
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
-        items: [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
-            label: 'Settings',
-          ),
-        ],
       ),
     );
   }

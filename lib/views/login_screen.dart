@@ -72,6 +72,12 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
+  Future<UserCredential?> signInWithGitHub(BuildContext context) async {
+    // TODO: Implement GitHub OAuth flow to get access token
+    // This is a placeholder for the authentication flow
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -143,6 +149,17 @@ class _LoginScreenState extends State<LoginScreen> {
                               valueColor: AlwaysStoppedAnimation(Colors.white))
                           : Text('Login',
                               style: TextStyle(color: Colors.white)),
+                    ),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed: () {
+                        signInWithGitHub(context).then((userCredential) {
+                          if (userCredential != null) {
+                            // Navigate to your main app screen or perform other actions
+                          }
+                        });
+                      },
+                      child: Text('Sign in with GitHub'),
                     ),
                     SizedBox(height: 20),
                     Row(
