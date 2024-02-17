@@ -72,10 +72,22 @@ class _LoginScreenState extends State<LoginScreen> {
         });
   }
 
-  Future<UserCredential?> signInWithGitHub(BuildContext context) async {
-    // TODO: Implement GitHub OAuth flow to get access token
-    // This is a placeholder for the authentication flow
-    return null;
+  signInWithGitHub(BuildContext context) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final UserCredential userCredential;
+
+    try {
+      //if adding mobile development, this will need additional logic
+      userCredential = await auth.signInWithPopup(GithubAuthProvider());
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainNavigationScreen(),
+          ));
+    } catch (e) {
+      showError(e.toString());
+    }
   }
 
   @override
@@ -152,14 +164,32 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     SizedBox(height: 15),
                     ElevatedButton(
-                      onPressed: () {
-                        signInWithGitHub(context).then((userCredential) {
-                          if (userCredential != null) {
-                            // Navigate to your main app screen or perform other actions
-                          }
-                        });
-                      },
-                      child: Text('Sign in with GitHub'),
+                      onPressed:
+                          _isLoading ? null : () => signInWithGitHub(context),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.black),
+                        padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(horizontal: 50, vertical: 15)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                        ),
+                      ),
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              valueColor: AlwaysStoppedAnimation(Colors.white))
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.access_alarm, color: Colors.white),
+                                SizedBox(width: 10),
+                                Text('Login with GitHub',
+                                    style: TextStyle(color: Colors.white)),
+                              ],
+                            ),
                     ),
                     SizedBox(height: 20),
                     Row(
