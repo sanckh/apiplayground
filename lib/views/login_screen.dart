@@ -2,6 +2,7 @@ import 'package:apiplayground/views/register_screen.dart';
 import 'package:apiplayground/widgets/main_navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -90,6 +91,24 @@ class _LoginScreenState extends State<LoginScreen> {
     }
   }
 
+  signInWithGoogle(BuildContext context) async {
+    final FirebaseAuth auth = FirebaseAuth.instance;
+    final UserCredential userCredential;
+
+    try {
+      //if adding mobile development, this will need additional logic
+      userCredential = await auth.signInWithPopup(GoogleAuthProvider());
+
+      Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => MainNavigationScreen(),
+          ));
+    } catch (e) {
+      showError(e.toString());
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -167,8 +186,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed:
                           _isLoading ? null : () => signInWithGitHub(context),
                       style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.black),
+                        backgroundColor: MaterialStateProperty.all(
+                            Colors.black), // GitHub's primary color
+                        foregroundColor: MaterialStateProperty.all(
+                            Colors.white), // Ensures text/icon color
                         padding: MaterialStateProperty.all(
                             EdgeInsets.symmetric(horizontal: 50, vertical: 15)),
                         shape:
@@ -177,17 +198,66 @@ class _LoginScreenState extends State<LoginScreen> {
                             borderRadius: BorderRadius.circular(4.0),
                           ),
                         ),
+                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.grey.shade800;
+                            return null;
+                          },
+                        ),
                       ),
                       child: _isLoading
                           ? CircularProgressIndicator(
-                              valueColor: AlwaysStoppedAnimation(Colors.white))
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.white),
+                            )
                           : Row(
                               mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.access_alarm, color: Colors.white),
+                              children: const [
+                                FaIcon(FontAwesomeIcons.github),
                                 SizedBox(width: 10),
-                                Text('Login with GitHub',
-                                    style: TextStyle(color: Colors.white)),
+                                Text('Login with GitHub'),
+                              ],
+                            ),
+                    ),
+                    SizedBox(height: 15),
+                    ElevatedButton(
+                      onPressed:
+                          _isLoading ? null : () => signInWithGoogle(context),
+                      style: ButtonStyle(
+                        backgroundColor:
+                            MaterialStateProperty.all(Colors.white),
+                        padding: MaterialStateProperty.all(
+                            EdgeInsets.symmetric(horizontal: 50, vertical: 15)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                        ),
+                        overlayColor: MaterialStateProperty.resolveWith<Color?>(
+                          (Set<MaterialState> states) {
+                            if (states.contains(MaterialState.pressed))
+                              return Colors.grey[200];
+                            return null;
+                          },
+                        ),
+                      ),
+                      child: _isLoading
+                          ? CircularProgressIndicator(
+                              valueColor:
+                                  AlwaysStoppedAnimation<Color>(Colors.blue),
+                            )
+                          : Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: const [
+                                FaIcon(FontAwesomeIcons.google,
+                                    color: Colors.black),
+                                SizedBox(width: 10),
+                                Text(
+                                  'Login with Google',
+                                  style: TextStyle(color: Colors.black),
+                                ),
                               ],
                             ),
                     ),
