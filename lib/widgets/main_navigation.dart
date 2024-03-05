@@ -1,6 +1,7 @@
 import 'package:apiplayground/models/users.dart';
 import 'package:apiplayground/services/user_service.dart';
 import 'package:apiplayground/views/home_screen.dart';
+import 'package:apiplayground/views/profile_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -62,7 +63,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
     final List<Widget> _screens = [
       HomeScreen(),
-      // ProfileScreen(user: _user!), // Uncomment and replace with actual ProfileScreen
+      ProfileScreen(user: _user!),
       // SettingsScreen(), // Uncomment and replace with actual SettingsScreen
     ];
 
