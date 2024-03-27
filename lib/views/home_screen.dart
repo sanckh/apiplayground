@@ -1,10 +1,12 @@
 import 'package:apiplayground/views/login_screen.dart';
 import 'package:apiplayground/views/search_results_screen.dart';
+import 'package:apiplayground/widgets/home_screen_grid_widget.dart';
 import 'package:apiplayground/widgets/search_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/models/tutorials.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -24,20 +26,18 @@ class _HomeScreenState extends State<HomeScreen> {
   void _loadTutorials() async {
     FirebaseFirestore.instance
     .collection('documentation')
+    .limit(2)
     .orderBy('create_date', descending: true)
     .snapshots()
     .listen((snapshot) {
     final newTutorials = snapshot.docs.map((doc) => Tutorial.fromMap(doc.data(), doc.id)).toList();
     setState(() {
         _tutorials = newTutorials;
-    });
-},
-onError: (error) => print("Error fetching tutorials: $error"));
-
-
+      });
+    },
+    onError: (error) => print("Error fetching tutorials: $error"));
   }
 
-  @override
   void _signOut() async {
     try {
       await FirebaseAuth.instance.signOut();
@@ -61,6 +61,7 @@ onError: (error) => print("Error fetching tutorials: $error"));
     ));
   }
   
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -77,53 +78,34 @@ onError: (error) => print("Error fetching tutorials: $error"));
           padding: const EdgeInsets.all(16),
           child: Column(
             children: [
-                    SearchWidget(
-                      onSearch: (query) {
-                        Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => SearchResultsScreen(searchQuery: query),
-                        ));
-                      },
-                    ),
-                    SizedBox(height: 16),
-                      GridView.builder(
-                        shrinkWrap: true,
-                        physics: NeverScrollableScrollPhysics(),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 10,
-                          mainAxisSpacing: 10
-                        ),
-                        itemCount: _tutorials.length,
-                        itemBuilder: (context, index) {
-                          final tutorial = _tutorials[index];
-                          return InkWell(
-                            onTap: () {
-                              //Navigate to tutorial detail screen
-                            },
-                            child: Card(
-                              child: Padding(
-                                padding: EdgeInsets.all(8),
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                      tutorial.title,
-                                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                                      overflow: TextOverflow.ellipsis,
-                                    ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      tutorial.description,
-                                      style: TextStyle(fontSize: 14),
-                                      maxLines: 3,
-                                      overflow: TextOverflow.ellipsis,
-                                    )
-                                  ]
-                                ))
-                            ),
-                          );
-                        },
-                      ),
+              SearchWidget(
+                onSearch: (query) {
+                  Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => SearchResultsScreen(searchQuery: query),
+                  ));
+                },
+              ),
+              SizedBox(height: 16),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Text('Recent Updates',
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
+              ),
+              HomeScreenGridWidget(
+                recentTutorials: _tutorials,
+                onCodeEditorTap: () {
+                  // Navigate to the Code Editor screen
+                },
+                onChallengesTap: () {
+                  // Navigate to the Challenges screen
+                },
+                onForumTap: () {
+                  // Navigate to the Forum screen
+                },
+                onTutorialsTap: () {
+                  // Navigate to the Tutorials screen
+                },
+              ),
             ]
           )
         )
@@ -131,3 +113,4 @@ onError: (error) => print("Error fetching tutorials: $error"));
     );
   }
 }
+
