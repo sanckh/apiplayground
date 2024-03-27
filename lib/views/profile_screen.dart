@@ -76,7 +76,7 @@ class _ProfileScreenState extends State<ProfileScreen>{
               )
               : CircleAvatar(
                 radius: 60,
-                backgroundImage: AssetImage("assets3.png"),
+                backgroundImage: AssetImage("asset3.png"),
               ),
             Positioned(
               bottom: -10,

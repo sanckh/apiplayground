@@ -44,5 +44,5 @@ app.*.map.json
 /android/app/release
 
 # API Keys and such
-/lib/algolio_options.dart
-.lib/firebase_options.dart
+lib/algolia_options.dart
+lib/firebase_options.dart
