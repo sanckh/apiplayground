@@ -19,6 +19,7 @@ dependencies:
   algolia: ^1.1.2
   image_picker: ^1.0.7
   firebase_storage: ^11.6.0
+  flutter_code_editor: ^0.3.0
 
 dev_dependencies:
   flutter_test:

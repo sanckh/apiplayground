@@ -1,6 +1,9 @@
 import 'package:apiplayground/models/tutorials.dart';
 import 'package:flutter/material.dart';
 
+//Screens
+import 'package:apiplayground/widgets/code_editor_widget.dart';
+
 // Define a model for Grid Items for flexibility
 class GridItem {
   final String title;
@@ -8,7 +11,11 @@ class GridItem {
   final VoidCallback onTap;
   final String? backgroundImage;
 
-  GridItem({required this.title, required this.description, required this.onTap, this.backgroundImage});
+  GridItem(
+      {required this.title,
+      required this.description,
+      required this.onTap,
+      this.backgroundImage});
 }
 
 class HomeScreenGridWidget extends StatelessWidget {
@@ -31,23 +38,48 @@ class HomeScreenGridWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ThemeData theme = Theme.of(context);
-    
+
     // Combine recent documents with other cards
     List<GridItem> items = recentTutorials.map((tutorial) {
-      return GridItem(title: tutorial.title, description: tutorial.description, onTap: () {
-        // Navigate to tutorial detail
-      });
+      return GridItem(
+          title: tutorial.title,
+          description: tutorial.description,
+          onTap: () {
+            // Navigate to tutorial detail
+          });
     }).toList();
+
+    void onCodeEditorTap() {
+      Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => CodeEditor(),
+      ));
+    }
 
     // Add other predefined cards with background images
     items.addAll([
-      GridItem(title: 'Code Editor', description: 'Access the code editor.', onTap: onCodeEditorTap, backgroundImage: 'assets/asset3.png'),
-      GridItem(title: 'Challenges', description: 'Solve challenges and quizzes.', onTap: onChallengesTap, backgroundImage: 'assets/asset3.png'),
-      GridItem(title: 'Forum', description: 'Join the community forum.', onTap: onForumTap, backgroundImage: 'assets/asset3.png'),
-      GridItem(title: 'Tutorials', description: 'Browse more tutorials.', onTap: onTutorialsTap, backgroundImage: 'assets/asset3.png'),
+      GridItem(
+          title: 'Code Editor',
+          description: 'Access the code editor.',
+          onTap: onCodeEditorTap,
+          backgroundImage: 'assets/asset3.png'),
+      GridItem(
+          title: 'Challenges',
+          description: 'Solve challenges and quizzes.',
+          onTap: onChallengesTap,
+          backgroundImage: 'assets/asset3.png'),
+      GridItem(
+          title: 'Forum',
+          description: 'Join the community forum.',
+          onTap: onForumTap,
+          backgroundImage: 'assets/asset3.png'),
+      GridItem(
+          title: 'Tutorials',
+          description: 'Browse more tutorials.',
+          onTap: onTutorialsTap,
+          backgroundImage: 'assets/asset3.png'),
     ]);
 
-     // Get screen width
+    // Get screen width
     double screenWidth = MediaQuery.of(context).size.width;
     // Dynamic crossAxisCount based on screen width to control width of items
     int crossAxisCount = 2; // Example of 2
@@ -61,7 +93,8 @@ class HomeScreenGridWidget extends StatelessWidget {
       shrinkWrap: true,
       physics: NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-        crossAxisCount: crossAxisCount, // Adjust based on your layout preference
+        crossAxisCount:
+            crossAxisCount, // Adjust based on your layout preference
         crossAxisSpacing: 10,
         mainAxisSpacing: 10,
         childAspectRatio: childAspectRatio,
@@ -72,15 +105,21 @@ class HomeScreenGridWidget extends StatelessWidget {
         return InkWell(
           onTap: item.onTap,
           child: Card(
-            clipBehavior: Clip.antiAlias, // Ensures the image (or any decoration) is clipped to the card's borders
+            clipBehavior: Clip
+                .antiAlias, // Ensures the image (or any decoration) is clipped to the card's borders
             child: Container(
-              decoration: item.backgroundImage != null ? BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage(item.backgroundImage!),
-                  fit: BoxFit.cover, // Cover the card's background
-                  colorFilter: ColorFilter.mode(Colors.black.withOpacity(0.3), BlendMode.darken), // Darken the image a bit for better text visibility
-                ),
-              ) : null,
+              decoration: item.backgroundImage != null
+                  ? BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(item.backgroundImage!),
+                        fit: BoxFit.cover, // Cover the card's background
+                        colorFilter: ColorFilter.mode(
+                            Colors.black.withOpacity(0.3),
+                            BlendMode
+                                .darken), // Darken the image a bit for better text visibility
+                      ),
+                    )
+                  : null,
               child: Padding(
                 padding: EdgeInsets.all(8),
                 child: Column(
@@ -88,13 +127,19 @@ class HomeScreenGridWidget extends StatelessWidget {
                   children: [
                     Text(
                       item.title,
-                      style: Theme.of(context).textTheme.titleLarge!.copyWith(color: const Color.fromARGB(255, 0, 0, 0)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .titleLarge!
+                          .copyWith(color: const Color.fromARGB(255, 0, 0, 0)),
                       overflow: TextOverflow.ellipsis,
                     ),
                     SizedBox(height: 5),
                     Text(
                       item.description,
-                      style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: const Color.fromARGB(255, 0, 0, 0)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium!
+                          .copyWith(color: const Color.fromARGB(255, 0, 0, 0)),
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
