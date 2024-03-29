@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -27,10 +28,16 @@
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>apiplayground</title>
   <link rel="manifest" href="manifest.json">
+
+  <!-- Monaco Editor Script -->
+  <!-- Load the Monaco Editor Loader Script -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.47.0/min/vs/loader.min.js"
+        integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 
   <script>
     // The value below is injected by flutter build, do not touch.
@@ -40,15 +47,30 @@
   <script src="flutter.js" defer></script>
 </head>
 <body>
+  <div id="editor" style="height:600px;"></div>
   <script>
-    window.addEventListener('load', function(ev) {
+    require.config({
+      paths: {
+        'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.47.0/min/vs'
+      }
+    });
+    require(['vs/editor/editor.main'], function () {
+      monaco.editor.create(document.getElementById('editor'), {
+        value: 'function x() {\n\tconsole.log("Hello world!");\n}',
+        language: 'javascript'
+      });
+    });
+  </script>
+
+  <script>
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine().then(function (appRunner) {
             appRunner.runApp();
           });
         }
@@ -56,4 +78,5 @@
     });
   </script>
 </body>
+
 </html>

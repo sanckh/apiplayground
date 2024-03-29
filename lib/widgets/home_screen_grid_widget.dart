@@ -2,7 +2,7 @@ import 'package:apiplayground/models/tutorials.dart';
 import 'package:flutter/material.dart';
 
 //Screens
-import 'package:apiplayground/widgets/code_editor_widget.dart';
+import 'package:apiplayground/widgets/monaco_editor_widget.dart';
 
 // Define a model for Grid Items for flexibility
 class GridItem {
@@ -51,7 +51,7 @@ class HomeScreenGridWidget extends StatelessWidget {
 
     void onCodeEditorTap() {
       Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => CodeEditor(),
+        builder: (context) => MonacoEditorWidget(),
       ));
     }
 
