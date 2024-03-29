@@ -1,5 +1,8 @@
+import 'dart:html' as html; // Make sure you're using dart:html for web-specific functionality
 import 'dart:js' as js;
 import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
+import 'dart:async'; // Import dart:async to use StreamSubscription
 
 class MonacoEditorWidget extends StatefulWidget {
   @override
@@ -7,21 +10,45 @@ class MonacoEditorWidget extends StatefulWidget {
 }
 
 class _MonacoEditorWidgetState extends State<MonacoEditorWidget> {
+  late StreamSubscription<html.MessageEvent> _messageSubscription; // Corrected type here
+
   @override
   void initState() {
     super.initState();
-    // Invoke the editor creation after the widget is built and rendered.
-    WidgetsBinding.instance.addPostFrameCallback((_) => triggerEditorCreation());
+    // Correctly initialize the StreamSubscription
+    _messageSubscription = html.window.onMessage.listen((event) {
+      if (event.data == 'editorReady') {
+        // Monaco Editor is ready for interaction
+        print('Monaco Editor is ready.');
+        // Perform any action you need here, such as enabling editing features
+      }
+    });
   }
 
-  void triggerEditorCreation() {
-    // Call the JavaScript function 'createEditor' that initializes the Monaco Editor.
-    js.context.callMethod('createEditor');
+  @override
+  void dispose() {
+    // Cancel the message subscription when the widget is disposed
+    _messageSubscription.cancel();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    // This widget acts as a container for the Monaco Editor.
-    return HtmlElementView(viewType: 'editor-div');
+    // Ensure the iframe ID is unique if using multiple instances
+    final String iframeId = 'monaco-editor-container';
+
+    // Create an IFrameElement
+    final html.IFrameElement iframeElement = html.IFrameElement()
+      ..src = 'monaco_editor.html'
+      ..style.border = 'none';
+
+    // Register the IFrameElement
+    // Ensure this is called only once for each unique viewType
+    ui.platformViewRegistry.registerViewFactory(
+      iframeId,
+      (int viewId) => iframeElement,
+    );
+
+    return HtmlElementView(viewType: iframeId);
   }
 }

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+  <!-- Load the Monaco Editor Loader Script -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.47.0/min/vs/loader.min.js"
+                integrity="sha512-ZG31AN9z/CQD1YDDAK4RUAvogwbJHv6bHrumrnMLzdCrVu4HeAqrUX7Jsal/cbUwXGfaMUNmQU04tQ8XXl5Znw=="
+                crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <style>body,html { margin: 0; padding: 0; height: 100%; }</style>
+    </head>
+
+  <body>
+    <div id="container" style="width:800px;height:600px;border:1px solid grey"></div>
+    <script>
+    require.config({
+      paths: {
+        'vs': 'https://cdnjs.cloudflare.com/ajax/libs/monaco-editor/0.47.0/min/vs'
+      }
+    });
+    require(['vs/editor/editor.main'], function () {
+      var editor = monaco.editor.create(document.getElementById('container'), {
+            value: "// Your code here",
+            language: 'javascript'
+        });
+    });
+    </script>
+</body>
+</html>

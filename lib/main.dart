@@ -6,16 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:apiplayground/views/login_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:firebase_core/firebase_core.dart';
-import 'dart:ui_web' as ui;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
-   ui.platformViewRegistry.registerViewFactory(
-    'editor-div',
-    (int viewId) => DivElement()..id = 'editor',
   );
   runApp(const Main());
 }
