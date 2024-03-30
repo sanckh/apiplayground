@@ -1,8 +1,9 @@
-import 'dart:html' as html; // Make sure you're using dart:html for web-specific functionality
-import 'dart:js' as js;
+import 'dart:html' as html;
+import 'dart:async'; // Import dart:async to use StreamSubscription
+import 'package:apiplayground/views/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
-import 'dart:async'; // Import dart:async to use StreamSubscription
+import 'dart:js' as js;
 
 class MonacoEditorWidget extends StatefulWidget {
   @override
@@ -10,18 +11,18 @@ class MonacoEditorWidget extends StatefulWidget {
 }
 
 class _MonacoEditorWidgetState extends State<MonacoEditorWidget> {
-  late StreamSubscription<html.MessageEvent> _messageSubscription; // Corrected type here
+  late StreamSubscription<html.MessageEvent>
+      _messageSubscription; // Corrected type here
 
   @override
   void initState() {
     super.initState();
+
+    js.context['exitEditorFromWidget'] = exitEditor;
+
     // Correctly initialize the StreamSubscription
     _messageSubscription = html.window.onMessage.listen((event) {
-      if (event.data == 'editorReady') {
-        // Monaco Editor is ready for interaction
-        print('Monaco Editor is ready.');
-        // Perform any action you need here, such as enabling editing features
-      }
+
     });
   }
 
@@ -31,6 +32,13 @@ class _MonacoEditorWidgetState extends State<MonacoEditorWidget> {
     _messageSubscription.cancel();
     super.dispose();
   }
+
+  void exitEditor() {
+  // Assuming you have access to a BuildContext, navigate to the desired route
+  Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => HomeScreen(),
+      )); // Adjust based on your routing setup
+}
 
   @override
   Widget build(BuildContext context) {
