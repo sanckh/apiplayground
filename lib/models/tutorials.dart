@@ -10,8 +10,9 @@ class Tutorial {
   final List<String> tags;
   final Timestamp? updateDate;
   final Timestamp createDate;
+  final String? imageUrl;
 
-  Tutorial({required this.id, required this.title, required this.author, required this.description, required this.category, required this.content, required this.tags, this.updateDate, required this.createDate});
+  Tutorial({required this.id, required this.title, required this.author, required this.description, required this.category, required this.content, required this.tags, this.updateDate, required this.createDate, this.imageUrl});
 
   factory Tutorial.fromMap(Map<String, dynamic> data, String id) {
     return Tutorial(
@@ -24,6 +25,7 @@ class Tutorial {
       category: data['category'],
       content: data['content'],
       tags: List<String>.from(data['tags']),
+      imageUrl: data['image_url'],
     );
   }
 }

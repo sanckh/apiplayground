@@ -1,4 +1,5 @@
 import 'package:apiplayground/models/tutorials.dart';
+import 'package:apiplayground/views/document_detail_screen.dart';
 import 'package:flutter/material.dart';
 
 //Screens
@@ -45,7 +46,9 @@ class HomeScreenGridWidget extends StatelessWidget {
           title: tutorial.title,
           description: tutorial.description,
           onTap: () {
-            // Navigate to tutorial detail
+            Navigator.of(context).push(MaterialPageRoute(
+              builder: (context) => DocumentDetailScreen(document: tutorial),
+            ));
           });
     }).toList();
 

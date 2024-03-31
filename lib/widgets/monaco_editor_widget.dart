@@ -34,10 +34,9 @@ class _MonacoEditorWidgetState extends State<MonacoEditorWidget> {
   }
 
   void exitEditor() {
-  // Assuming you have access to a BuildContext, navigate to the desired route
   Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => HomeScreen(),
-      )); // Adjust based on your routing setup
+      ));
 }
 
   @override
