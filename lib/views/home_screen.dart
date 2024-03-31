@@ -4,7 +4,7 @@ import 'package:apiplayground/widgets/home_screen_grid_widget.dart';
 import 'package:apiplayground/widgets/search_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/models/tutorials.dart';
+import 'package:apiplayground/models/documents.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
@@ -15,7 +15,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final TextEditingController _searchController = TextEditingController();
-  List<Tutorial> _tutorials = [];
+  List<Document> _tutorials = [];
   
   @override
   void initState() {
@@ -30,7 +30,7 @@ class _HomeScreenState extends State<HomeScreen> {
     .orderBy('create_date', descending: true)
     .snapshots()
     .listen((snapshot) {
-    final newTutorials = snapshot.docs.map((doc) => Tutorial.fromMap(doc.data(), doc.id)).toList();
+    final newTutorials = snapshot.docs.map((doc) => Document.fromMap(doc.data(), doc.id)).toList();
     setState(() {
         _tutorials = newTutorials;
       });
@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),),
               ),
               HomeScreenGridWidget(
-                recentTutorials: _tutorials,
+                recentDocuments: _tutorials,
                 onCodeEditorTap: () {
                   // Navigate to the Code Editor screen
                 },

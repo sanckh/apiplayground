@@ -1,4 +1,4 @@
-import 'package:apiplayground/models/tutorials.dart';
+import 'package:apiplayground/models/documents.dart';
 import 'package:apiplayground/views/document_detail_screen.dart';
 import 'package:flutter/material.dart';
 
@@ -20,7 +20,7 @@ class GridItem {
 }
 
 class HomeScreenGridWidget extends StatelessWidget {
-  final List<Tutorial> recentTutorials;
+  final List<Document> recentDocuments;
   final VoidCallback onCodeEditorTap;
   final VoidCallback onChallengesTap;
   final VoidCallback onForumTap;
@@ -29,7 +29,7 @@ class HomeScreenGridWidget extends StatelessWidget {
   // Initialize with required callbacks or actions
   HomeScreenGridWidget({
     Key? key,
-    required this.recentTutorials,
+    required this.recentDocuments,
     required this.onCodeEditorTap,
     required this.onChallengesTap,
     required this.onForumTap,
@@ -41,7 +41,7 @@ class HomeScreenGridWidget extends StatelessWidget {
     ThemeData theme = Theme.of(context);
 
     // Combine recent documents with other cards
-    List<GridItem> items = recentTutorials.map((tutorial) {
+    List<GridItem> items = recentDocuments.map((tutorial) {
       return GridItem(
           title: tutorial.title,
           description: tutorial.description,

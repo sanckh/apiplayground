@@ -1,9 +1,9 @@
-import 'package:apiplayground/models/tutorials.dart';
+import 'package:apiplayground/models/documents.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 class DocumentDetailScreen extends StatelessWidget {
-  final Tutorial document;
+  final Document document;
 
   const DocumentDetailScreen({Key? key, required this.document}) : super(key: key);
 
