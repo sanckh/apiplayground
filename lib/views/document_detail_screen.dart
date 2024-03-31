@@ -12,8 +12,8 @@ class DocumentDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(document.title, style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.deepPurple, // Enhanced UI feature
+        title: SelectableText(document.title, style: TextStyle(color: Colors.white)),
+        backgroundColor: Colors.deepPurple,
         actions: [
           IconButton(
             icon: Icon(Icons.share),
@@ -24,64 +24,75 @@ class DocumentDetailScreen extends StatelessWidget {
         ],
       ),
       body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (document.imageUrl != null)
-              ClipRRect(
-                borderRadius: BorderRadius.circular(8.0), // Adds rounded corners to the image
-                child: Image.network(
-                  document.imageUrl!,
-                  fit: BoxFit.cover,
+        child: Center(
+          child: Container(
+            width: MediaQuery.of(context).size.width > 800 ? 800 : MediaQuery.of(context).size.width * 0.9,
+            padding: EdgeInsets.all(24.0),
+            margin: EdgeInsets.all(16.0),
+            decoration: BoxDecoration(
+              color: Colors.white, // Page-like background color
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 5,
+                  blurRadius: 7,
+                  offset: Offset(0, 3), // changes position of shadow
                 ),
-              ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: Text(
-                document.title,
-                style: Theme.of(context).textTheme.headlineSmall?.copyWith(color: Colors.deepPurple),
-              ),
+              ],
+              borderRadius: BorderRadius.circular(12.0),
             ),
-            Text(
-              'By ${document.author}',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(fontStyle: FontStyle.italic),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (document.imageUrl != null)
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(8.0),
+                    child: Image.network(
+                      document.imageUrl!,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: SelectableText(
+                    document.title,
+                    style: Theme.of(context).textTheme.headline5?.copyWith(color: Colors.deepPurple),
+                  ),
+                ),
+                SelectableText(
+                  'By ${document.author}',
+                  style: Theme.of(context).textTheme.subtitle1?.copyWith(fontStyle: FontStyle.italic),
+                ),
+                SizedBox(height: 16.0),
+                SelectableText(
+                  document.description,
+                  style: Theme.of(context).textTheme.bodyText2,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 16.0),
+                  child: HtmlWidget(
+                    document.content,
+                    onTapUrl: (url) async {
+                      if (await canLaunch(url)) {
+                        await launch(url);
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: SelectableText('Could not launch $url')),
+                        );
+                      }
+                      return true;
+                    },
+                  ),
+                ),
+                Wrap(
+                  spacing: 8.0,
+                  runSpacing: 4.0,
+                  children: document.tags.map((tag) => Chip(label: SelectableText(tag))).toList(),
+                ),
+              ],
             ),
-            SizedBox(height: 16.0),
-            Text(
-              document.description,
-              style: Theme.of(context).textTheme.bodyMedium,
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16.0),
-              child: HtmlWidget(
-                document.content,
-                onTapUrl: (url) async {
-                  if (await canLaunch(url)) {
-                    await launch(url);
-                  } else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      SnackBar(content: Text('Could not launch $url')),
-                    );
-                  }
-                  return true;
-                },
-              ),
-            ),
-            Wrap(
-              spacing: 8.0, // gap between adjacent chips
-              runSpacing: 4.0, // gap between lines
-              children: document.tags.map((tag) => Chip(label: Text(tag))).toList(),
-            ),
-          ],
+          ),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.deepPurple,
-        child: Icon(Icons.edit),
-        onPressed: () {
-          // Add edit functionality here
-        },
       ),
     );
   }
