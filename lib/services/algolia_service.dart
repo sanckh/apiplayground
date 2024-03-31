@@ -6,6 +6,7 @@ class AlgoliaService {
     applicationId: AlgoliaOptions.applicationId,
     apiKey: AlgoliaOptions.apiKey,
   );
+  
   static Future<List<AlgoliaObjectSnapshot>> queryData(String queryString) async {
     AlgoliaQuery query = AlgoliaService.algolia.instance
         .index('documentation')
