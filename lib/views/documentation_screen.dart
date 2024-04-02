@@ -3,6 +3,7 @@ import 'package:apiplayground/services/algolia_service.dart';
 import 'package:apiplayground/widgets/documentation_cards.dart';
 import 'package:apiplayground/widgets/filter_options_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/models/documents.dart';
 import 'package:apiplayground/services/firebase_service.dart';
@@ -17,6 +18,7 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
   List<Map<String, dynamic>> tags = [];
   List<AlgoliaObjectSnapshot> documents = [];
   bool isLoading = false;
+  String searchText = '';
 
   @override
   void initState() {
@@ -67,22 +69,51 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
   });
 }
 
+  void onSearchTextChanged(String text) async {
+    if (text.isEmpty) return;
 
-  @override
+    setState(() => isLoading = true);
+    List<AlgoliaObjectSnapshot> documents =
+        await AlgoliaService.queryDataWithFilters(text);
+    setState(() {
+      searchText = text;
+      this.documents = documents;
+      isLoading = false;
+    });
+  }
+
+
+@override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Row(
         children: [
           Expanded(
             flex: 2,
-            child: isLoading
-                ? Center(child: CircularProgressIndicator())
-                : FilterOptions(
-                    categories: categories,
-                    tags: tags,
-                    onTagSelected: onTagSelected,
-                    onCategorySelected: onCategorySelected,
+            child: Container(
+              color: Colors.grey[200],
+              padding: EdgeInsets.all(10),
+              child: Column(
+                children: [
+                  CupertinoTextField(
+                    placeholder: 'Search...',
+                    padding: EdgeInsets.symmetric(vertical: 12, horizontal: 10),
+                    onChanged: onSearchTextChanged,
                   ),
+                  SizedBox(height: 10),
+                  Expanded(
+                    child: isLoading
+                        ? Center(child: CircularProgressIndicator())
+                        : FilterOptions(
+                            categories: categories,
+                            tags: tags,
+                            onTagSelected: onTagSelected,
+                            onCategorySelected: onCategorySelected,
+                          ),
+                  ),
+                ],
+              ),
+            ),
           ),
           Expanded(
             flex: 8,
@@ -94,5 +125,4 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
       ),
     );
   }
-  
 }

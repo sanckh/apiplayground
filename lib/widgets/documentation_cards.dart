@@ -1,6 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/models/documents.dart'; // Import your Document model
+import 'package:apiplayground/models/documents.dart';
 import 'package:apiplayground/widgets/document_card_widget.dart';
 
 class DocumentationCards extends StatelessWidget {
@@ -10,14 +10,14 @@ class DocumentationCards extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: algoliaSnapshots.length,
-      itemBuilder: (context, index) {
-        // Map AlgoliaObjectSnapshot to Document model
-        Document document = Document.fromAlgolia(algoliaSnapshots[index]);
-        // Use your existing DocumentCard widget
-        return DocumentCard(document: document);
-      },
-    );
+    return algoliaSnapshots.isEmpty
+        ? Center(child: Text("No results found"))
+        : ListView.builder(
+            itemCount: algoliaSnapshots.length,
+            itemBuilder: (context, index) {
+              Document document = Document.fromAlgolia(algoliaSnapshots[index]);
+              return DocumentCard(document: document);
+            },
+          );
   }
 }
