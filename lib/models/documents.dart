@@ -9,12 +9,12 @@ class Document {
   final String categoryName;
   final String categoryId;
   final String content;
-  final List<String> tags;
+  final List<String> tagIds;
   final Timestamp? updateDate;
   final Timestamp createDate;
   final String? imageUrl;
 
-  Document({required this.id, required this.title, required this.author, required this.description, required this.categoryId, required this.categoryName, required this.content, required this.tags, this.updateDate, required this.createDate, this.imageUrl});
+  Document({required this.id, required this.title, required this.author, required this.description, required this.categoryId, required this.categoryName, required this.content, required this.tagIds, this.updateDate, required this.createDate, this.imageUrl});
 
   factory Document.fromMap(Map<String, dynamic> data, String id) {
     return Document(
@@ -27,7 +27,7 @@ class Document {
       categoryId: data['category_id'],
       categoryName: data['category_name'],
       content: data['content'],
-      tags: List<String>.from(data['tags']),
+      tagIds: List<String>.from(data['tag_ids']),
       imageUrl: data['image_url'],
     );
   }
@@ -42,7 +42,7 @@ class Document {
       categoryId: data['category_id'],
       categoryName: data['category_name'],
       content: data['content'],
-      tags: List<String>.from(data['tags']),
+      tagIds: List<String>.from(data['tag_ids']),
       updateDate: data['update_date'] != null ? Timestamp.fromMillisecondsSinceEpoch(data['update_date']) : null,
       createDate: Timestamp.fromMillisecondsSinceEpoch(data['create_date']),
       imageUrl: data['imageUrl'],

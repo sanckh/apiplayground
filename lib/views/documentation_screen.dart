@@ -14,6 +14,7 @@ class DocumentationScreen extends StatefulWidget {
 
 class _DocumentationScreenState extends State<DocumentationScreen> {
   List<Map<String, dynamic>> categories = [];
+  List<Map<String, dynamic>> tags = [];
   List<AlgoliaObjectSnapshot> documents = [];
   bool isLoading = false;
 
@@ -21,6 +22,7 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
   void initState() {
     super.initState();
     loadCategories();
+    loadTags();
   }
 
   Future<void> loadCategories() async {
@@ -32,19 +34,42 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
     });
   }
 
+  Future<void> loadTags() async {
+    setState(() => isLoading = true);
+    List<Map<String, dynamic>> fetchedTags = await FirebaseService().getTags();
+    setState(() {
+      tags = fetchedTags;
+      isLoading = false;
+    });
+  }
+
    void onCategorySelected(String categoryId) async {
     setState(() => isLoading = true);
     List<AlgoliaObjectSnapshot> documents =
-        await AlgoliaService.queryDataWithFilters('', category: categoryId);
+        await AlgoliaService.queryDataWithFilters('', categoryId: categoryId);
+        
     setState(() {
       this.documents = documents;
       isLoading = false;
     });
   }
 
+  void onTagSelected(String tagId) async {
+  setState(() => isLoading = true);
+  // Since queryDataWithFilters now expects a List<String> for tagId,
+  // we wrap the single tagId in a list.
+  List<AlgoliaObjectSnapshot> documents =
+      await AlgoliaService.queryDataWithFilters('', tagId: [tagId]);
+      
+  setState(() {
+    this.documents = documents;
+    isLoading = false;
+  });
+}
+
+
   @override
   Widget build(BuildContext context) {
-  final tags = ['Tag 1', 'Tag 2', 'Tag 3'];
     return Scaffold(
       body: Row(
         children: [
@@ -55,6 +80,7 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
                 : FilterOptions(
                     categories: categories,
                     tags: tags,
+                    onTagSelected: onTagSelected,
                     onCategorySelected: onCategorySelected,
                   ),
           ),

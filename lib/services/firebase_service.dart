@@ -8,12 +8,26 @@ class FirebaseService {
         .get();
 
     return snapshot.docs.map((doc) {
-  Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
-  return {
-    'id': doc.id,
-    'name': data['category_name'],
-    'sortOrder': data['sort_order'],
-  };
-}).toList();
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return {
+        'id': doc.id,
+        'name': data['category_name'],
+        'sortOrder': data['sort_order'],
+      };
+    }).toList();
+  }
+
+  Future<List<Map<String, dynamic>>> getTags() async {
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('tag')
+        .get();
+
+    return snapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+      return {
+        'id': doc.id,
+        'name': data['tag_name'],
+      };
+    }).toList();
   }
 }

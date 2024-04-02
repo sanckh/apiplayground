@@ -13,7 +13,7 @@ class DocumentationCards extends StatelessWidget {
     return ListView.builder(
       itemCount: algoliaSnapshots.length,
       itemBuilder: (context, index) {
-        // Map AlgoliaObjectSnapshot to your Document model
+        // Map AlgoliaObjectSnapshot to Document model
         Document document = Document.fromAlgolia(algoliaSnapshots[index]);
         // Use your existing DocumentCard widget
         return DocumentCard(document: document);

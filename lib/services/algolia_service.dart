@@ -18,16 +18,16 @@ class AlgoliaService {
     return results;
   }
 
-  static Future<List<AlgoliaObjectSnapshot>> queryDataWithFilters(String queryString, {String? category, List<String>? tags}) async {
-
+  static Future<List<AlgoliaObjectSnapshot>> queryDataWithFilters(String queryString, {String? categoryId, List<String>? tagId}) async {
     AlgoliaQuery query = AlgoliaService.algolia.instance.index('documentation').query(queryString);
-    if (category != null) {
-    query = query.facetFilter('category:$category');
+    
+    if (categoryId != null) {
+    query = query.facetFilter('category_id:$categoryId');
   }
 
-  if (tags != null && tags.isNotEmpty) {
-    for (String tag in tags) {
-      query = query.facetFilter('tags:$tag');
+  if (tagId != null && tagId.isNotEmpty) {
+    for (String tag in tagId) {
+      query = query.facetFilter('tag_ids:$tag');
     }
   }
 

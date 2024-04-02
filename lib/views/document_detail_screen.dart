@@ -87,7 +87,7 @@ class DocumentDetailScreen extends StatelessWidget {
                 Wrap(
                   spacing: 8.0,
                   runSpacing: 4.0,
-                  children: document.tags.map((tag) => Chip(label: SelectableText(tag))).toList(),
+                  children: document.tagIds.map((tag) => Chip(label: SelectableText(tag))).toList(),
                 ),
               ],
             ),

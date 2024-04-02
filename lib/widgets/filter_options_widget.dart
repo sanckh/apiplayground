@@ -3,9 +3,10 @@ import 'package:flutter/material.dart';
 class FilterOptions extends StatelessWidget {
   final List<Map<String, dynamic>> categories;
   final Function(String categoryId) onCategorySelected;
-  final List<String> tags;
+  final Function(String categoryId) onTagSelected;
+  final List<Map<String, dynamic>> tags;
 
-  const FilterOptions({Key? key, required this.categories, required this.onCategorySelected, required this.tags}) : super(key: key);
+  const FilterOptions({Key? key, required this.categories, required this.onCategorySelected, required this.onTagSelected, required this.tags}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,9 +24,9 @@ class FilterOptions extends StatelessWidget {
         Text('Tags'),
         for (var tag in tags)
           ListTile(
-            title: Text(tag),
+            title: Text(tag['name']),
             onTap: () {
-              // Update your search/filter logic
+              onTagSelected(tag['id']);
             },
           ),
       ],
