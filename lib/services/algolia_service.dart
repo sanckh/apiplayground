@@ -17,5 +17,22 @@ class AlgoliaService {
 
     return results;
   }
+
+  static Future<List<AlgoliaObjectSnapshot>> queryDataWithFilters(String queryString, {String? category, List<String>? tags}) async {
+
+    AlgoliaQuery query = AlgoliaService.algolia.instance.index('documentation').query(queryString);
+    if (category != null) {
+    query = query.facetFilter('category:$category');
+  }
+
+  if (tags != null && tags.isNotEmpty) {
+    for (String tag in tags) {
+      query = query.facetFilter('tags:$tag');
+    }
+  }
+
+  AlgoliaQuerySnapshot snapshot = await query.getObjects();
+  return snapshot.hits;
+  }
 }
 

@@ -1,5 +1,6 @@
 import 'package:apiplayground/models/users.dart';
 import 'package:apiplayground/services/user_service.dart';
+import 'package:apiplayground/views/documentation_screen.dart';
 import 'package:apiplayground/views/home_screen.dart';
 import 'package:apiplayground/views/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     final List<Widget> _screens = [
       HomeScreen(),
       ProfileScreen(user: _user!),
+      DocumentationScreen(),
       // SettingsScreen(), // Uncomment and replace with actual SettingsScreen
     ];
 
@@ -107,8 +109,13 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
             ),
             ListTile(
               leading: Icon(Icons.settings),
-              title: Text('Settings'),
+              title: Text('Documentation'),
               onTap: () => _onSelectItem(2),
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('Settings'),
+              onTap: () => _onSelectItem(3),
             ),
           ],
         ),

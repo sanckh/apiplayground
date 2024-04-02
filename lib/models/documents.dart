@@ -6,14 +6,15 @@ class Document {
   final String title;
   final String author;
   final String description;
-  final String category;
+  final String categoryName;
+  final String categoryId;
   final String content;
   final List<String> tags;
   final Timestamp? updateDate;
   final Timestamp createDate;
   final String? imageUrl;
 
-  Document({required this.id, required this.title, required this.author, required this.description, required this.category, required this.content, required this.tags, this.updateDate, required this.createDate, this.imageUrl});
+  Document({required this.id, required this.title, required this.author, required this.description, required this.categoryId, required this.categoryName, required this.content, required this.tags, this.updateDate, required this.createDate, this.imageUrl});
 
   factory Document.fromMap(Map<String, dynamic> data, String id) {
     return Document(
@@ -23,7 +24,8 @@ class Document {
       description: data['description'],
       createDate: data['create_date'],
       updateDate: data['update_date'],
-      category: data['category'],
+      categoryId: data['category_id'],
+      categoryName: data['category_name'],
       content: data['content'],
       tags: List<String>.from(data['tags']),
       imageUrl: data['image_url'],
@@ -37,7 +39,8 @@ class Document {
       title: data['title'],
       author: data['author'],
       description: data['description'],
-      category: data['category'],
+      categoryId: data['category_id'],
+      categoryName: data['category_name'],
       content: data['content'],
       tags: List<String>.from(data['tags']),
       updateDate: data['update_date'] != null ? Timestamp.fromMillisecondsSinceEpoch(data['update_date']) : null,
