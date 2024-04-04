@@ -108,7 +108,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               onTap: () => _onSelectItem(1),
             ),
             ListTile(
-              leading: Icon(Icons.settings),
+              leading: Icon(Icons.library_books),
               title: Text('Documentation'),
               onTap: () => _onSelectItem(2),
             ),

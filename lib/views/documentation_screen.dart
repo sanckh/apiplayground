@@ -29,7 +29,8 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
 
   Future<void> loadCategories() async {
     setState(() => isLoading = true);
-    List<Map<String, dynamic>> fetchedCategories = await FirebaseService().getCategories();
+    List<Map<String, dynamic>> fetchedCategories =
+        await FirebaseService().getCategories();
     setState(() {
       categories = fetchedCategories;
       isLoading = false;
@@ -45,11 +46,11 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
     });
   }
 
-   void onCategorySelected(String categoryId) async {
+  void onCategorySelected(String categoryId) async {
     setState(() => isLoading = true);
     List<AlgoliaObjectSnapshot> documents =
         await AlgoliaService.queryDataWithFilters('', categoryId: categoryId);
-        
+
     setState(() {
       this.documents = documents;
       isLoading = false;
@@ -57,17 +58,15 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
   }
 
   void onTagSelected(String tagId) async {
-  setState(() => isLoading = true);
-  // Since queryDataWithFilters now expects a List<String> for tagId,
-  // we wrap the single tagId in a list.
-  List<AlgoliaObjectSnapshot> documents =
-      await AlgoliaService.queryDataWithFilters('', tagId: [tagId]);
-      
-  setState(() {
-    this.documents = documents;
-    isLoading = false;
-  });
-}
+    setState(() => isLoading = true);
+    List<AlgoliaObjectSnapshot> documents =
+        await AlgoliaService.queryDataWithFilters('', tagId: [tagId]);
+
+    setState(() {
+      this.documents = documents;
+      isLoading = false;
+    });
+  }
 
   void onSearchTextChanged(String text) async {
     if (text.isEmpty) return;
@@ -82,9 +81,9 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
     });
   }
 
-
-@override
+  @override
   Widget build(BuildContext context) {
+    bool hasSearched = searchText.isNotEmpty;
     return Scaffold(
       body: Row(
         children: [
@@ -119,7 +118,8 @@ class _DocumentationScreenState extends State<DocumentationScreen> {
             flex: 8,
             child: isLoading
                 ? Center(child: CircularProgressIndicator())
-                : DocumentationCards(algoliaSnapshots: documents),
+                : DocumentationCards(
+                    algoliaSnapshots: documents, hasSearched: hasSearched),
           ),
         ],
       ),
