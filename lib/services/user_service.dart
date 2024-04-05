@@ -1,4 +1,4 @@
-import 'package:apiplayground/models/users.dart';
+import 'package:apiplayground/models/user_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class UserService {

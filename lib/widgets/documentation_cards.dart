@@ -1,6 +1,6 @@
 import 'package:algolia/algolia.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/models/documents.dart';
+import 'package:apiplayground/models/document_model.dart';
 import 'package:apiplayground/widgets/document_card_widget.dart';
 
 class DocumentationCards extends StatelessWidget {

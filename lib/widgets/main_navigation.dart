@@ -1,6 +1,7 @@
-import 'package:apiplayground/models/users.dart';
+import 'package:apiplayground/models/user_model.dart';
 import 'package:apiplayground/services/user_service.dart';
 import 'package:apiplayground/views/documentation_screen.dart';
+import 'package:apiplayground/views/forum_screen.dart';
 import 'package:apiplayground/views/home_screen.dart';
 import 'package:apiplayground/views/profile_screen.dart';
 import 'package:flutter/material.dart';
@@ -66,6 +67,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       HomeScreen(),
       ProfileScreen(user: _user!),
       DocumentationScreen(),
+      ForumScreen(),
       // SettingsScreen(), // Uncomment and replace with actual SettingsScreen
     ];
 
@@ -113,9 +115,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               onTap: () => _onSelectItem(2),
             ),
             ListTile(
+              leading: Icon(Icons.folder),
+              title: Text('Forum'),
+              onTap: () => _onSelectItem(3),
+            ),
+            ListTile(
               leading: Icon(Icons.settings),
               title: Text('Settings'),
-              onTap: () => _onSelectItem(3),
+              onTap: () => _onSelectItem(4),
             ),
           ],
         ),

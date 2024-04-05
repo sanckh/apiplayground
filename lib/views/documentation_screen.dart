@@ -5,7 +5,7 @@ import 'package:apiplayground/widgets/filter_options_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/models/documents.dart';
+import 'package:apiplayground/models/document_model.dart';
 import 'package:apiplayground/services/firebase_service.dart';
 
 class DocumentationScreen extends StatefulWidget {

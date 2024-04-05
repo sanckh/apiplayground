@@ -1,4 +1,4 @@
-import 'package:apiplayground/models/documents.dart';
+import 'package:apiplayground/models/document_model.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:url_launcher/url_launcher.dart';

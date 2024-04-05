@@ -1,3 +1,5 @@
+import 'package:apiplayground/models/post_model.dart';
+import 'package:apiplayground/models/topic_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class FirebaseService {
@@ -30,4 +32,20 @@ class FirebaseService {
       };
     }).toList();
   }
+
+  Stream<List<Topic>> fetchTopics() {
+    return FirebaseFirestore.instance.collection('topic').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => Topic.fromFirestore(doc)).toList();
+    });
+  }
+
+  Stream<List<Post>> fetchPosts(String topicId) {
+  return FirebaseFirestore.instance.collection('post')
+    .where('topic_id', isEqualTo: topicId)
+    .snapshots()
+    .map((snapshot) {
+      return snapshot.docs.map((doc) => Post.fromFirestore(doc)).toList();
+    });
+}
+
 }

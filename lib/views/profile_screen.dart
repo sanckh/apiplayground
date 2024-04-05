@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:apiplayground/models/users.dart';
+import 'package:apiplayground/models/user_model.dart';
 import 'package:apiplayground/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';

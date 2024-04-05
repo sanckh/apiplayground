@@ -4,7 +4,7 @@ import 'package:apiplayground/widgets/home_screen_grid_widget.dart';
 import 'package:apiplayground/widgets/search_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/models/documents.dart';
+import 'package:apiplayground/models/document_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 
