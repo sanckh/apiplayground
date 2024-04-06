@@ -1,5 +1,6 @@
 import 'package:apiplayground/models/post_model.dart';
 import 'package:apiplayground/services/firebase_service.dart';
+import 'package:apiplayground/widgets/post_details_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -27,7 +28,12 @@ class PostsPage extends StatelessWidget {
                 title: Text(post.title),
                 subtitle: Text(post.content, maxLines: 2, overflow: TextOverflow.ellipsis),
                 onTap: () {
-                  //Post Detail Widget
+                  Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => PostDetailsPage(postId: post.id)
+                    ),
+                );
                 },
               );
             },

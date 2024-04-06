@@ -1,3 +1,4 @@
+import 'package:apiplayground/models/comment_model.dart';
 import 'package:apiplayground/models/post_model.dart';
 import 'package:apiplayground/models/topic_model.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -48,4 +49,16 @@ class FirebaseService {
     });
 }
 
+Future<Post> fetchPostDetails(String postId) async {
+    var doc = await FirebaseFirestore.instance.collection('post').doc(postId).get();
+    return Post.fromFirestore(doc);
+  }
+
+  // Add a method to fetch comments for the post
+  Stream<List<Comment>> fetchComments(String postId) {
+    return FirebaseFirestore.instance.collection('comment')
+      .where('postId', isEqualTo: postId)
+      .snapshots()
+      .map((snapshot) => snapshot.docs.map((doc) => Comment.fromFirestore(doc)).toList());
+  }
 }
