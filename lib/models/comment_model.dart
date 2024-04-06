@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Comment {
   String id;
+  String userId;
   String postId;
   String parentCommentId;
   String content;
@@ -10,6 +11,7 @@ class Comment {
 
   Comment({
     required this.id,
+    required this.userId,
     required this.postId,
     required this.parentCommentId,
     required this.content,
@@ -21,8 +23,9 @@ class Comment {
     Map data = doc.data() as Map;
     return Comment(
       id: doc.id,
-      postId: data['postId'] ?? '',
-      parentCommentId: data['parentCommentId'] ?? '',
+      userId: data['user_id'] ?? '',
+      postId: data['post_id'] ?? '',
+      parentCommentId: data['parentComment_id'] ?? '',
       content: data['content'] ?? '',
       upvotes: data['upvotes'] ?? 0,
       downvotes: data['downvotes'] ?? 0,

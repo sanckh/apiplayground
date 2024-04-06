@@ -1,3 +1,4 @@
+import 'package:apiplayground/widgets/comment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/models/post_model.dart'; // Import your Post model
 import 'package:apiplayground/models/comment_model.dart'; // Import your Comment model
@@ -18,7 +19,8 @@ class PostDetailsPage extends StatelessWidget {
         child: Column(
           children: [
             FutureBuilder<Post>(
-              future: FirebaseService().fetchPostDetails(postId), // Implement this method in FirebaseService
+              future: FirebaseService().fetchPostDetails(
+                  postId), // Implement this method in FirebaseService
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -32,7 +34,8 @@ class PostDetailsPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(post.title, style: Theme.of(context).textTheme.headline6),
+                      Text(post.title,
+                          style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 8),
                       Text(post.content),
                     ],
@@ -40,10 +43,29 @@ class PostDetailsPage extends StatelessWidget {
                 );
               },
             ),
+            // Inside the SingleChildScrollView of PostDetailsPage
+
             Divider(),
-            // Placeholder for comments list
             Text('Comments', style: Theme.of(context).textTheme.headline6),
-            // FutureBuilder or StreamBuilder for comments will go here
+            StreamBuilder<List<Comment>>(
+              stream: FirebaseService().fetchComments(postId,
+                  parentCommentId: ""), // Fetch root-level comments
+              builder: (context, snapshot) {
+                if (!snapshot.hasData) return CircularProgressIndicator();
+                List<Comment> comments = snapshot.data!;
+                return ListView.builder(
+                  physics:
+                      NeverScrollableScrollPhysics(), // Disable scrolling within ListView
+                  shrinkWrap:
+                      true, // Required to display inside a SingleChildScrollView
+                  itemCount: comments.length,
+                  itemBuilder: (context, index) {
+                    return CommentWidget(
+                        postId: postId, comment: comments[index]);
+                  },
+                );
+              },
+            ),
           ],
         ),
       ),
