@@ -8,6 +8,7 @@ class Comment {
   String content;
   int upvotes;
   int downvotes;
+  int netvotes;
 
   Comment({
     required this.id,
@@ -17,6 +18,7 @@ class Comment {
     required this.content,
     required this.upvotes,
     required this.downvotes,
+    required this.netvotes,
   });
 
   factory Comment.fromFirestore(DocumentSnapshot doc) {
@@ -25,10 +27,11 @@ class Comment {
       id: doc.id,
       userId: data['user_id'] ?? '',
       postId: data['post_id'] ?? '',
-      parentCommentId: data['parentComment_id'] ?? '',
+      parentCommentId: data['parent_comment_id'] ?? '',
       content: data['content'] ?? '',
       upvotes: data['upvotes'] ?? 0,
       downvotes: data['downvotes'] ?? 0,
+      netvotes: data['netvotes'] ?? 0,
     );
   }
 }

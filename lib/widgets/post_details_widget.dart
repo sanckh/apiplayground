@@ -1,3 +1,4 @@
+import 'package:apiplayground/services/user_service.dart';
 import 'package:apiplayground/widgets/comment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/models/post_model.dart'; // Import your Post model
@@ -8,6 +9,32 @@ class PostDetailsPage extends StatelessWidget {
   final String postId;
 
   const PostDetailsPage({Key? key, required this.postId}) : super(key: key);
+
+  void _vote(bool isUpvote) async {
+
+  String? userId = UserService().getUserId();
+  
+
+  try {
+    // Assuming this is the structure of your castVote method
+    await FirebaseService().castVote(
+      userId: userId!,
+      itemId: postId,
+      voteType: isUpvote ? 'up' : 'down',
+      itemType: 'post',
+    );
+
+    // After successfully casting a vote, update the vote count
+    await FirebaseService().updateVoteCount(
+      postId,
+      isUpvote ? 1 : -1,
+      'post'
+    );
+  } catch (error) {
+    // Handle errors, such as showing an error message
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -38,15 +65,27 @@ class PostDetailsPage extends StatelessWidget {
                           style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 8),
                       Text(post.content),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.thumb_up),
+                            onPressed: () => _vote(true),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.thumb_down),
+                            onPressed: () => _vote(false),
+                          ),
+                          Text('Votes: ${post.netvotes}'),
+                        ],
+                      ),
                     ],
                   ),
                 );
               },
             ),
-            // Inside the SingleChildScrollView of PostDetailsPage
-
             Divider(),
-            Text('Comments', style: Theme.of(context).textTheme.headline6),
+            Text('Comments', style: Theme.of(context).textTheme.titleLarge),
             StreamBuilder<List<Comment>>(
               stream: FirebaseService().fetchComments(postId,
                   parentCommentId: ""), // Fetch root-level comments

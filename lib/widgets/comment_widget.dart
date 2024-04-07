@@ -1,3 +1,4 @@
+import 'package:apiplayground/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/models/comment_model.dart';
 import 'package:apiplayground/services/firebase_service.dart';
@@ -12,13 +13,39 @@ class CommentWidget extends StatelessWidget {
     required this.comment,
   }) : super(key: key);
 
-   @override
+  void _vote(bool isUpvote) async {
+
+  String? userId = UserService().getUserId();
+  print("Voting with user ID: $userId"); 
+
+  try {
+    // Assuming this is the structure of your castVote method
+    await FirebaseService().castVote(
+      userId: userId!,
+      itemId: comment.id,
+      voteType: isUpvote ? 'up' : 'down',
+      itemType: 'comment',
+    );
+
+    // After successfully casting a vote, update the vote count
+    await FirebaseService().updateVoteCount(
+      comment.id,
+      isUpvote ? 1 : -1,
+      'comment'
+    );
+  } catch (error) {
+    // Handle errors, such as showing an error message
+  }
+}
+
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         FutureBuilder<String>(
-          future: FirebaseService().fetchUsernameByUserId(comment.userId),
+          future: UserService().fetchUsernameByUserId(comment.userId),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
               return CircularProgressIndicator();
@@ -33,13 +60,27 @@ class CommentWidget extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.all(8.0),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(username, style: Theme.of(context).textTheme.titleMedium),
-                    SizedBox(height: 4),
-                    Text(comment.content),
-                  ],
-                ),
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(username,
+                          style: Theme.of(context).textTheme.titleMedium),
+                      SizedBox(height: 4),
+                      Text(comment.content),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          IconButton(
+                            icon: Icon(Icons.thumb_up),
+                            onPressed: () => _vote(true),
+                          ),
+                          IconButton(
+                            icon: Icon(Icons.thumb_down),
+                            onPressed: () => _vote(false),
+                          ),
+                          Text('Votes: ${comment.netvotes}'),
+                        ],
+                      ),
+                    ]),
               ),
             );
           },
@@ -47,12 +88,16 @@ class CommentWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.only(left: 16.0),
           child: StreamBuilder<List<Comment>>(
-            stream: FirebaseService().fetchComments(postId, parentCommentId: comment.id),
+            stream: FirebaseService()
+                .fetchComments(postId, parentCommentId: comment.id),
             builder: (context, snapshot) {
               if (!snapshot.hasData) return SizedBox();
               List<Comment> childComments = snapshot.data!;
               return Column(
-                children: childComments.map((childComment) => CommentWidget(postId: postId, comment: childComment)).toList(),
+                children: childComments
+                    .map((childComment) =>
+                        CommentWidget(postId: postId, comment: childComment))
+                    .toList(),
               );
             },
           ),

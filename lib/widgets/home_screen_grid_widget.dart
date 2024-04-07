@@ -52,11 +52,11 @@ class HomeScreenGridWidget extends StatelessWidget {
           });
     }).toList();
 
-    void onCodeEditorTap() {
-      Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => MonacoEditorWidget(),
-      ));
-    }
+    // void onCodeEditorTap() {
+    //   Navigator.of(context).push(MaterialPageRoute(
+    //     builder: (context) => MonacoEditorWidget(),
+    //   ));
+    // }
 
     // Add other predefined cards with background images
     items.addAll([

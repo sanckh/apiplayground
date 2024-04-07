@@ -74,13 +74,76 @@ class FirebaseService {
         snapshot.docs.map((doc) => Comment.fromFirestore(doc)).toList());
   }
 
-  Future<String> fetchUsernameByUserId(String userId) async {
-    DocumentSnapshot userDoc =
-        await FirebaseFirestore.instance.collection('users').doc(userId).get();
-   if (userDoc.exists && userDoc.data() is Map<String, dynamic> && (userDoc.data() as Map<String, dynamic>).containsKey('username')) {
-      return (userDoc.data() as Map<String, dynamic>)['username'] as String;
-    } else {
-      throw Exception('User not found for ID: $userId');
-    }
+  Future<DocumentReference> addPost(String topicId, String title, String content, String userId) async {
+    CollectionReference posts = FirebaseFirestore.instance.collection('post');
+    return posts.add({
+      'topic_id': topicId,
+      'title': title,
+      'content': content,
+      'created_on': Timestamp.now(),
+      'updated_on': '',
+      'user_id': userId,
+    });
   }
+
+    Future<DocumentReference> addComment(String postId, String userId, String content, {String parentCommentId = ''}) async {
+    CollectionReference comments = FirebaseFirestore.instance.collection('comment');
+    return comments.add({
+      'post_id': postId,
+      'user_id': userId,
+      'content': content,
+      'parent_comment_id': parentCommentId,
+      'upvotes': 0,
+      'downvotes': 0,
+      'netvotes' : 0,
+      'created_on': Timestamp.now(),
+    });
+  }
+
+Future<void> castVote({
+  required String userId, 
+  required String itemId, 
+  required String voteType, 
+  required String itemType
+}) async {
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  // Construct a unique document ID using the item type, item ID, and user ID
+  String docId = '$itemType-$itemId-$userId';
+
+  // Define the document reference in the 'votes' collection
+  DocumentReference voteRef = firestore.collection('vote').doc(docId);
+
+  // Prepare the vote data
+  Map<String, dynamic> voteData = {
+    'user_id': userId,
+    'item_id': itemId,
+    'vote_type': voteType,
+    'item_type': itemType, // This helps to differentiate between a vote on a post or a comment
+  };
+
+  // Write the vote data to Firestore
+  await voteRef.set(voteData);
+}
+
+Future<void> updateVoteCount(String itemId, int change, String itemType) async {
+  final DocumentReference itemRef = FirebaseFirestore.instance
+      .collection(itemType)
+      .doc(itemId);
+
+  return FirebaseFirestore.instance.runTransaction((transaction) async {
+    DocumentSnapshot snapshot = await transaction.get(itemRef);
+
+    if (!snapshot.exists) {
+      throw Exception("$itemType does not exist!");
+    }
+
+    int currentVotes = (snapshot.data() as Map<String, dynamic>)['netvotes'] ?? 0;
+    transaction.update(itemRef, {'netvotes': currentVotes + change});
+  });
+}
+
+
+
+
 }

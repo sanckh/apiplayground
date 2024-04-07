@@ -1,5 +1,6 @@
 import 'package:apiplayground/models/post_model.dart';
 import 'package:apiplayground/services/firebase_service.dart';
+import 'package:apiplayground/widgets/create_post_widget.dart';
 import 'package:apiplayground/widgets/post_details_widget.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -29,16 +30,29 @@ class PostsPage extends StatelessWidget {
                 subtitle: Text(post.content, maxLines: 2, overflow: TextOverflow.ellipsis),
                 onTap: () {
                   Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => PostDetailsPage(postId: post.id)
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => PostDetailsPage(postId: post.id),
                     ),
-                );
+                  );
                 },
               );
             },
           );
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          // Navigate to the CreatePostScreen
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => CreatePostScreen(topicId: topicId),
+            ),
+          );
+        },
+        child: Icon(Icons.add),
+        tooltip: 'Add Post',
       ),
     );
   }
