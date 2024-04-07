@@ -16,7 +16,6 @@ class CommentWidget extends StatelessWidget {
   void _vote(bool isUpvote) async {
 
   String? userId = UserService().getUserId();
-  print("Voting with user ID: $userId"); 
 
   try {
     // Assuming this is the structure of your castVote method

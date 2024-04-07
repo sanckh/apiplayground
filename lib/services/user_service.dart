@@ -28,16 +28,13 @@ class UserService {
   Future<String> fetchUsernameByUserId(String userId) async {
   final DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection('users').doc(userId).get();
   if (!userDoc.exists) {
-    print("User document does not exist for ID: $userId");
     throw Exception("User not found for ID: $userId");
   } else {
     final data = userDoc.data() as Map<String, dynamic>?;
     if (data != null && data.containsKey('username')) {
       final String username = data['username'];
-      print("Fetched username: $username for userID: $userId");
       return username;
     } else {
-      print("Username field is missing for user ID: $userId");
       throw Exception("Username field is missing for user ID: $userId");
     }
   }
