@@ -10,30 +10,25 @@ class PostDetailsPage extends StatelessWidget {
 
   const PostDetailsPage({Key? key, required this.postId}) : super(key: key);
 
-  void _vote(bool isUpvote) async {
+void _vote(bool isUpvote) async {
+    String? userId = UserService().getUserId();
 
-  String? userId = UserService().getUserId();
-  
+    try {
+      // Cast or update the vote
+      await FirebaseService().castVote(
+        userId: userId!,
+        itemId: postId,
+        voteType: isUpvote ? 'up' : 'down',
+        itemType: 'post',
+      );
 
-  try {
-    // Assuming this is the structure of your castVote method
-    await FirebaseService().castVote(
-      userId: userId!,
-      itemId: postId,
-      voteType: isUpvote ? 'up' : 'down',
-      itemType: 'post',
-    );
+      // UI feedback or state update might be required here if you're displaying vote counts dynamically
 
-    // After successfully casting a vote, update the vote count
-    await FirebaseService().updateVoteCount(
-      postId,
-      isUpvote ? 1 : -1,
-      'post'
-    );
-  } catch (error) {
-    // Handle errors, such as showing an error message
+    } catch (error) {
+      // Handle errors, such as showing an error message
+      print("Error casting vote: $error");
+    }
   }
-}
 
 
   @override

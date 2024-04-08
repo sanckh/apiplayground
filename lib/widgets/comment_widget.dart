@@ -14,28 +14,23 @@ class CommentWidget extends StatelessWidget {
   }) : super(key: key);
 
   void _vote(bool isUpvote) async {
+    String? userId = UserService().getUserId();
 
-  String? userId = UserService().getUserId();
+    try {
+      // Cast or update the vote
+      await FirebaseService().castVote(
+        userId: userId!,
+        itemId: comment.id,
+        voteType: isUpvote ? 'up' : 'down',
+        itemType: 'comment',
+      );
+      // UI feedback or state update might be required here if you're displaying vote counts dynamically
 
-  try {
-    // Assuming this is the structure of your castVote method
-    await FirebaseService().castVote(
-      userId: userId!,
-      itemId: comment.id,
-      voteType: isUpvote ? 'up' : 'down',
-      itemType: 'comment',
-    );
-
-    // After successfully casting a vote, update the vote count
-    await FirebaseService().updateVoteCount(
-      comment.id,
-      isUpvote ? 1 : -1,
-      'comment'
-    );
-  } catch (error) {
-    // Handle errors, such as showing an error message
+    } catch (error) {
+      // Handle errors, such as showing an error message
+      print("Error casting vote: $error");
+    }
   }
-}
 
 
   @override
