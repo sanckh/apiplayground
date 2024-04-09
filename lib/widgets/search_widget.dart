@@ -25,7 +25,7 @@ class _SearchWidgetState extends State<SearchWidget> {
           child: TextField(
             controller: _searchController,
             decoration: InputDecoration(
-              hintText: 'Search Documentation',
+              hintText: 'Search...',
               border: OutlineInputBorder(),
               suffixIcon: IconButton(
                 icon: Icon(Icons.clear),

@@ -7,7 +7,7 @@ class AlgoliaService {
     apiKey: AlgoliaOptions.apiKey,
   );
   
-  static Future<List<AlgoliaObjectSnapshot>> queryData(String queryString) async {
+  static Future<List<AlgoliaObjectSnapshot>> queryDocumentationData(String queryString) async {
     AlgoliaQuery query = AlgoliaService.algolia.instance
         .index('documentation')
         .query(queryString);
@@ -34,5 +34,18 @@ class AlgoliaService {
   AlgoliaQuerySnapshot snapshot = await query.getObjects();
   return snapshot.hits;
   }
+
+    static Future<List<AlgoliaObjectSnapshot>> queryPostData(String queryString) async {
+    AlgoliaQuery query = AlgoliaService.algolia.instance
+        .index('post')
+        .query(queryString);
+    
+    AlgoliaQuerySnapshot snapshot = await query.getObjects();
+    List<AlgoliaObjectSnapshot> results = snapshot.hits;
+
+    return results;
+  }
 }
+
+
 

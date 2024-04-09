@@ -1,9 +1,9 @@
 import 'package:apiplayground/services/user_service.dart';
 import 'package:apiplayground/widgets/comment_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/models/post_model.dart'; // Import your Post model
-import 'package:apiplayground/models/comment_model.dart'; // Import your Comment model
-import 'package:apiplayground/services/firebase_service.dart'; // Import your Firebase service
+import 'package:apiplayground/models/post_model.dart';
+import 'package:apiplayground/models/comment_model.dart';
+import 'package:apiplayground/services/firebase_service.dart';
 
 class PostDetailsPage extends StatelessWidget {
   final String postId;
