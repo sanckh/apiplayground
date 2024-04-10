@@ -10,25 +10,63 @@ class PostDetailsPage extends StatelessWidget {
 
   const PostDetailsPage({Key? key, required this.postId}) : super(key: key);
 
-void _vote(bool isUpvote) async {
-    String? userId = UserService().getUserId();
+  void _vote(bool isUpvote) async {
+    //String? userId = UserService().getUserId();
 
     try {
       // Cast or update the vote
       await FirebaseService().castVote(
-        userId: userId!,
+        userId: 'test',
         itemId: postId,
         voteType: isUpvote ? 'up' : 'down',
         itemType: 'post',
       );
 
       // UI feedback or state update might be required here if you're displaying vote counts dynamically
-
     } catch (error) {
       // Handle errors, such as showing an error message
       print("Error casting vote: $error");
     }
   }
+
+  void _showAddCommentDialog(BuildContext context) {
+  TextEditingController _commentController = TextEditingController();
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Add a Comment"),
+        content: TextField(
+          controller: _commentController,
+          decoration: InputDecoration(hintText: "Type your comment here..."),
+        ),
+        actions: [
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: Text("Post Comment"),
+            onPressed: () async {
+              if (_commentController.text.isNotEmpty) {
+                String? userId = UserService().getUserId();
+                if (userId != null) {
+                  await FirebaseService().addComment(
+                    postId,
+                    userId,
+                    _commentController.text,
+                  );
+                  Navigator.of(context).pop(); // Close the dialog
+                  // Optionally, trigger a state update to show the new comment
+                }
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
 
 
   @override
@@ -99,6 +137,11 @@ void _vote(bool isUpvote) async {
                   },
                 );
               },
+            ),
+            FloatingActionButton(
+              onPressed: () => _showAddCommentDialog(context),
+              child: Icon(Icons.add_comment),
+              tooltip: 'Add a Comment',
             ),
           ],
         ),

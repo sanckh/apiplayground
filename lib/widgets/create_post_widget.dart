@@ -1,3 +1,4 @@
+import 'package:apiplayground/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/services/firebase_service.dart'; // Import your Firebase service
 
@@ -15,6 +16,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
   String _title = '';
   String _content = '';
   bool _isLoading = false;
+  String? userId = UserService().getUserId();
 
   void _submitPost() async {
     if (_formKey.currentState!.validate()) {
@@ -24,7 +26,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       _formKey.currentState!.save();
 
       try {
-        await FirebaseService().addPost(widget.topicId, _title, _content, 'yourUserId');
+        await FirebaseService().addPost(widget.topicId, _title, _content, userId!);
         Navigator.of(context).pop();
       } catch (e) {
         print(e);

@@ -32,6 +32,47 @@ class CommentWidget extends StatelessWidget {
     }
   }
 
+  void _showReplyDialog(BuildContext context) {
+  TextEditingController _replyController = TextEditingController();
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: Text("Reply to Comment"),
+        content: TextField(
+          controller: _replyController,
+          decoration: InputDecoration(hintText: "Type your reply here..."),
+        ),
+        actions: [
+          TextButton(
+            child: Text("Cancel"),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
+          TextButton(
+            child: Text("Reply"),
+            onPressed: () async {
+              if (_replyController.text.isNotEmpty) {
+                String? userId = UserService().getUserId();
+                if (userId != null) {
+                  await FirebaseService().addComment(
+                    postId,
+                    userId,
+                    _replyController.text,
+                    parentCommentId: comment.id,
+                  );
+                  Navigator.of(context).pop(); // Close the dialog
+                  // Optionally, trigger a state update to show the new comment
+                }
+              }
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -72,6 +113,10 @@ class CommentWidget extends StatelessWidget {
                             onPressed: () => _vote(false),
                           ),
                           Text('Votes: ${comment.netvotes}'),
+                          IconButton(
+                            icon: Icon(Icons.comment),
+                            onPressed: () => _showReplyDialog(context),
+                          ),
                         ],
                       ),
                     ]),

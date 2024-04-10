@@ -1,5 +1,5 @@
 import 'package:apiplayground/views/login_screen.dart';
-import 'package:apiplayground/views/search_results_screen.dart';
+import 'package:apiplayground/widgets/search_results_screen.dart';
 import 'package:apiplayground/widgets/home_screen_grid_widget.dart';
 import 'package:apiplayground/widgets/search_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';

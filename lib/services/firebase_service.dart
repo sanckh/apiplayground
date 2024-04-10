@@ -82,8 +82,11 @@ class FirebaseService {
       'title': title,
       'content': content,
       'created_on': Timestamp.now(),
-      'updated_on': '',
+      'updated_on': null,
       'user_id': userId,
+      'upvotes': 0,
+      'downvotes': 0,
+      'netvotes': 0
     });
   }
 
@@ -101,6 +104,7 @@ class FirebaseService {
       'downvotes': 0,
       'netvotes': 0,
       'created_on': Timestamp.now(),
+      'updated_on': null
     });
   }
 
