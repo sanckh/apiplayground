@@ -1,6 +1,6 @@
 import 'package:apiplayground/services/user_service.dart';
 import 'package:flutter/material.dart';
-import 'package:apiplayground/services/firebase_service.dart'; // Import your Firebase service
+import 'package:apiplayground/services/firebase_service.dart';
 
 class CreatePostScreen extends StatefulWidget {
   final String topicId;
@@ -46,7 +46,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
       ),
       body: _isLoading
           ? Center(child: CircularProgressIndicator())
-          : Padding(
+          : SingleChildScrollView( 
+            child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Form(
                 key: _formKey,
@@ -64,6 +65,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                         _title = value!;
                       },
                     ),
+                    SizedBox(height: 10),
                     TextFormField(
                       decoration: InputDecoration(labelText: 'Content'),
                       validator: (value) {
@@ -75,6 +77,8 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                       onSaved: (value) {
                         _content = value!;
                       },
+                      keyboardType: TextInputType.multiline,
+                      maxLines: null,
                     ),
                     SizedBox(height: 20),
                     ElevatedButton(
@@ -85,6 +89,7 @@ class _CreatePostScreenState extends State<CreatePostScreen> {
                 ),
               ),
             ),
+          ),
     );
   }
 }

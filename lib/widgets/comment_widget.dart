@@ -2,6 +2,7 @@ import 'package:apiplayground/services/user_service.dart';
 import 'package:flutter/material.dart';
 import 'package:apiplayground/models/comment_model.dart';
 import 'package:apiplayground/services/firebase_service.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class CommentWidget extends StatelessWidget {
   final String postId;
@@ -25,7 +26,6 @@ class CommentWidget extends StatelessWidget {
         itemType: 'comment',
       );
       // UI feedback or state update might be required here if you're displaying vote counts dynamically
-
     } catch (error) {
       // Handle errors, such as showing an error message
       print("Error casting vote: $error");
@@ -33,46 +33,55 @@ class CommentWidget extends StatelessWidget {
   }
 
   void _showReplyDialog(BuildContext context) {
-  TextEditingController _replyController = TextEditingController();
-  showDialog(
-    context: context,
-    builder: (context) {
-      return AlertDialog(
-        title: Text("Reply to Comment"),
-        content: TextField(
-          controller: _replyController,
-          decoration: InputDecoration(hintText: "Type your reply here..."),
-        ),
-        actions: [
-          TextButton(
-            child: Text("Cancel"),
-            onPressed: () => Navigator.of(context).pop(),
+    TextEditingController _replyController = TextEditingController();
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: Text("Reply to Comment"),
+          content: SingleChildScrollView(
+            // Allows the dialog to be scrollable
+            child: ListBody(
+              children: <Widget>[
+                TextFormField(
+                  controller: _replyController,
+                  decoration:
+                      InputDecoration(hintText: "Type your reply here..."),
+                  keyboardType: TextInputType.multiline,
+                  maxLines: null, // Allows for multiple lines
+                ),
+              ],
+            ),
           ),
-          TextButton(
-            child: Text("Reply"),
-            onPressed: () async {
-              if (_replyController.text.isNotEmpty) {
-                String? userId = UserService().getUserId();
-                if (userId != null) {
-                  await FirebaseService().addComment(
-                    postId,
-                    userId,
-                    _replyController.text,
-                    parentCommentId: comment.id,
-                  );
-                  Navigator.of(context).pop(); // Close the dialog
-                  // Optionally, trigger a state update to show the new comment
+          actions: [
+            TextButton(
+              child: Text("Cancel"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+            TextButton(
+              child: Text("Reply"),
+              onPressed: () async {
+                if (_replyController.text.isNotEmpty) {
+                  if (_replyController.text.isNotEmpty) {
+                    String? userId = UserService().getUserId();
+                    if (userId != null) {
+                      await FirebaseService().addComment(
+                        postId,
+                        userId,
+                        _replyController.text,
+                        parentCommentId: comment.id,
+                      );
+                      Navigator.of(context).pop();
+                    }
+                  }
                 }
-              }
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -100,7 +109,7 @@ class CommentWidget extends StatelessWidget {
                       Text(username,
                           style: Theme.of(context).textTheme.titleMedium),
                       SizedBox(height: 4),
-                      Text(comment.content),
+                      MarkdownBody(data: comment.content),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
