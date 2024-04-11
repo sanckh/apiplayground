@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:apiplayground/models/post_model.dart';
 import 'package:apiplayground/models/comment_model.dart';
 import 'package:apiplayground/services/firebase_service.dart';
+import 'package:flutter_markdown/flutter_markdown.dart';
 
 class PostDetailsPage extends StatelessWidget {
   final String postId;
@@ -35,10 +36,18 @@ class PostDetailsPage extends StatelessWidget {
     context: context,
     builder: (context) {
       return AlertDialog(
-        title: Text("Add a Comment"),
-        content: TextField(
-          controller: _commentController,
-          decoration: InputDecoration(hintText: "Type your comment here..."),
+        title: Text("Reply to Comment"),
+        content: SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              TextFormField(
+                controller: _commentController,
+                decoration: InputDecoration(hintText: "Type your reply here..."),
+                keyboardType: TextInputType.multiline,
+                maxLines: null,
+              ),
+            ],
+          ),
         ),
         actions: [
           TextButton(
@@ -46,7 +55,7 @@ class PostDetailsPage extends StatelessWidget {
             onPressed: () => Navigator.of(context).pop(),
           ),
           TextButton(
-            child: Text("Post Comment"),
+            child: Text("Reply"),
             onPressed: () async {
               if (_commentController.text.isNotEmpty) {
                 String? userId = UserService().getUserId();
@@ -56,8 +65,7 @@ class PostDetailsPage extends StatelessWidget {
                     userId,
                     _commentController.text,
                   );
-                  Navigator.of(context).pop(); // Close the dialog
-                  // Optionally, trigger a state update to show the new comment
+                  Navigator.of(context).pop();
                 }
               }
             },
@@ -67,6 +75,7 @@ class PostDetailsPage extends StatelessWidget {
     },
   );
 }
+
 
 
   @override
@@ -80,7 +89,7 @@ class PostDetailsPage extends StatelessWidget {
           children: [
             FutureBuilder<Post>(
               future: FirebaseService().fetchPostDetails(
-                  postId), // Implement this method in FirebaseService
+                  postId),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return CircularProgressIndicator();
@@ -97,7 +106,7 @@ class PostDetailsPage extends StatelessWidget {
                       Text(post.title,
                           style: Theme.of(context).textTheme.headline6),
                       SizedBox(height: 8),
-                      Text(post.content),
+                      MarkdownBody(data: post.content),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
